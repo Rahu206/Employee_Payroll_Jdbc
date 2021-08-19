@@ -6,8 +6,9 @@ public class Application {
 	public static void main(String[] args) {
 		DBOpertionUsingStatement dbOpertionUsingStatement = new DBOpertionUsingStatement();
 		//dbOpertionUsingStatement.createTable();
-		//dbOpertionUsingStatement.insertRecordsInTable();
-		dbOpertionUsingStatement.updateRecordInTable();
+		dbOpertionUsingStatement.insertRecordsInTable();
+	//	dbOpertionUsingStatement.updateRecordInTable();
+	//	dbOpertionUsingStatement.fetchAllRecords();
 	
 	}
 	
