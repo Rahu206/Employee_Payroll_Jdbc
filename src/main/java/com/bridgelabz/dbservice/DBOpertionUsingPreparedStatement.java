@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Scanner;
 import com.bridgelabz.config.DBConfiguration;
 import com.bridgelabz.entity.Employee;
 
-public class DBOpertionUsingPreparedStatement implements IDBOperation {
+public class DBOpertionUsingPreparedStatement {
 	DBConfiguration dbConfiguration =new DBConfiguration();
 	 PreparedStatement preparedstatement = null;
 	 // Connection connection=null;
@@ -21,7 +22,7 @@ public class DBOpertionUsingPreparedStatement implements IDBOperation {
 	
 	final String CREATE_TABLE_QUERY ="create table IF NOT EXISTS employee(id int,name varchar(255),salary int)";	
 	final String INSERT_QUERY ="INSERT INTO employee(id ,name ,salary)VALUES (?,?,?)";
-	final String SELECT_QUERY="SELECT * FROM employee";
+	final String FETCH_QUERY="SELECT * FROM employee";
 	final  String UPDATE_QUERY="UPDATE employee SET salary=? WHERE ID=?";
 	
 
@@ -40,24 +41,8 @@ public class DBOpertionUsingPreparedStatement implements IDBOperation {
 		Scanner scanner = new Scanner(System.in);
 		List<Employee>emp = new ArrayList<Employee>();
 		Employee employee = new Employee(scanner.nextInt(),scanner.next(),scanner.nextInt());
-		//Employee employee2 = new Employee(scanner.nextInt(),scanner.next(),scanner.nextInt());
-	//	Employee employee3 = new Employee(scanner.nextInt(),scanner.next(),scanner.nextInt());
-		//Employee employee4 = new Employee(scanner.nextInt(),scanner.next(),scanner.nextInt());
-		//Employee employee5 = new Employee(scanner.nextInt(),scanner.next(),scanner.nextInt());
-		
 		emp.add(employee);
-	   // emp.add(employee2);
-	//	emp.add(employee3);
-		//emp.add(employee4);
-		//emp.add(employee5);
 	    
-	    System.out.println("Enter Employee id:");
-		int id = scanner.nextInt();
-		System.out.println("Enter the value for name");
-		String name = scanner.next();
-		System.out.println("Enter the value for salary: ");
-		int salary = scanner.nextInt();
-		
 		try {
 			preparedstatement = connection.prepareStatement(INSERT_QUERY);
 			preparedstatement.setInt(1, id);
@@ -109,11 +94,33 @@ public class DBOpertionUsingPreparedStatement implements IDBOperation {
 		return 0;*/
 	}
 
-	@Override
-	public int updateRecordInTable() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	public void updateEmployeeDetails() {
+		try {
+		connection.setAutoCommit(false);
+		ResultSet resultSet =null;
+		PreparedStatement preparedStatement =connection.prepareStatement(UPDATE_QUERY);
+		Savepoint sp = connection.setSavepoint("First Save Point");
+		
+		preparedStatement.setInt((1,20000);
+		preparedStatement.setInt(2,1);
+		preparedStatement.executeUpdate();
+		
+		System.out.println("After First Update:");
+		resultSet =preparedStatement.executeQuery(FETCH_QUERY);
+		while (resultSet.next()) {
+			System.out.println("Name: " + resultSet.getString(2));
+			System.out.println("Salary: "+resultSet.getInt(3) );
+			System.out.println();
+		}
+		connection.rollback();
+		connection.commit();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
 	}
+	}
+
 
 	@Override
 	public void fetchAllRecords() {
